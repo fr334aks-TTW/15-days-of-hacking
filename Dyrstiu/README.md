@@ -1,5 +1,5 @@
 ### X-Days of Hacking
 
-- [What i intend to learn]()
+- [What i intend to learn](./learning.md)
 - [Progress]()
   
