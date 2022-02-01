@@ -19,7 +19,7 @@ This is within an ace of everything i'll be covering. I'll keep updating it!
     - [ ] **WHILE** loops
      - \(continue, break, else, pass, match)
 6. Functions
-7. Reading and Writing files
+7. File handling
     - Error and exceptions handling
 8. Modules and packages
     - [ ] sockets
