@@ -14,14 +14,14 @@ This is within an ace of everything i'll be covering. I'll keep updating it!
 2. Lists, Sets, Tuples, Dictionaries  
 4. Conditionals
     - [ ] IF statements
-5. Loops
+   Loops
     - [ ] **FOR** loops
     - [ ] **WHILE** loops
      - \(continue, break, else, pass, match)
-6. Functions
-7. File handling
+5. Functions
+6. File handling
     - Error and exceptions handling
-8. Modules and packages
+7. Modules and packages
     - [ ] sockets
     - [ ] scapy
-9. POOP Basics
+8. POOP Basics
