@@ -24,6 +24,4 @@ This is within an ace of everything i'll be covering. I'll keep updating it!
 8. Modules and packages
     - [ ] sockets
     - [ ] scapy
-    - [ ] pwntools
-    - [ ] pycryptodome
 9. POOP Basics
