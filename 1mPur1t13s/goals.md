@@ -14,6 +14,7 @@ This is within an ace of everything i'll be covering. I'll keep updating it!
 2. Lists, Sets, Tuples, Dictionaries  
 4. Conditionals
     - [ ] IF statements
+    
    Loops
     - [ ] **FOR** loops
     - [ ] **WHILE** loops
