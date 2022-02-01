@@ -12,10 +12,8 @@ This is within an ace of everything i'll be covering. I'll keep updating it!
     - [x] Numbers, Strings, Boolean
     - [x] Inputs in python
 2. Lists, Sets, Tuples, Dictionaries  
-4. Conditionals
+4. Control Flows
     - [ ] IF statements
-    
-   Loops
     - [ ] **FOR** loops
     - [ ] **WHILE** loops
      - \(continue, break, else, pass, match)
