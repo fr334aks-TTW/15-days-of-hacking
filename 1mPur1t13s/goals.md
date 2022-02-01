@@ -9,8 +9,8 @@ This is within an ace of everything i'll be covering. I'll keep updating it!
   
 1. Python Basics
     - [x] Variables, Comments, Operators
-    - [x ] Numbers, Strings, Boolean
-    - [ x] Inputs in python
+    - [x] Numbers, Strings, Boolean
+    - [x] Inputs in python
 2. Lists, Sets, Tuples, Dictionaries  
 4. Conditionals
     - [ ] IF statements
