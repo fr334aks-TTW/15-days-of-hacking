@@ -8,15 +8,15 @@ This will mark the beggining of a beautiful journey into Offensive NIM from the 
 Topics i will be studying on:
 1. Basics
 
-- NIM Basics
-  - [] Installation, Lexical Elements
-  - [] Variables, Inputs
-  - [] Data Types
-- Control Flows
-- Procedures(Methods/Functions)
-- Modules
-- Object Oriented
-- Metaprogamming
+    - [ ] NIM Basics
+        - [ ] Installation, Lexical Elements
+        - [ ] Variables, Inputs
+        - [ ] Data Types
+    - [ ] Control Flows
+    - [ ] Procedures(Methods/Functions)
+    - [ ] Modules
+    - [ ] Object Oriented
+    - [ ] Metaprogamming
 
 2. Offensive
 -
