@@ -44,7 +44,7 @@
 #### Server-Side Labs
 * [x] SQL injection 
 * [ ] Authentication vulnerabilities
-* [ ] Directory Traversal
+* [x] Directory Traversal
 * [ ] OS Command Injection
 * [ ] Business Logic Vulnerabilities
 * [ ] Information Disclosure
