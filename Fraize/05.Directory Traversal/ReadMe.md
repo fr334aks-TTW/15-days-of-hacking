@@ -61,3 +61,4 @@ if (file.getCanonicalPath().startsWith(BASE_DIRECTORY)){
 ](https://portswigger.net/web-security/file-path-traversal/lab-superfluous-url-decode)
 - [Lab: File path traversal, validation of start of path](https://portswigger.net/web-security/file-path-traversal/lab-validate-start-of-path)
 - [Lab: File path traversal, validation of file extension with null byte bypass](https://portswigger.net/web-security/file-path-traversal/lab-validate-file-extension-null-byte-bypass)
+![](Directory_Traversal_Lab.png)
