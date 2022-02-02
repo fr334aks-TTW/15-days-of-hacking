@@ -1,3 +1,5 @@
+It is vital to understand how the Windows operating system functions as a defender. Today i will be going through core processes as understanding how they operate normally can aid a defender to identify unusual activity on the endpoint.
+
 # Core Windows Processes
 
 ## Task Manager
@@ -85,20 +87,170 @@ This process starts the kernel mode and user mode of the Windows subsystem (you 
 
 Smss.exe starts csrss.exe (Windows subsystem) and wininit.exe in Session 0, an isolated Windows session for the operating system, and csrss.exe and winlogon.exe for Session 1, which is the user session. The first child instance creates child instances in new sessions. This is done by smss.exe copying itself into the new session and self-terminating. You can read more about this process [here](https://en.wikipedia.org/wiki/Session_Manager_Subsystem).
 
-# TO BE CONTINUED
+What is normal?
+
+- Image Path: %SystemRoot%\System32\smss.exe
+- Parent Process: System
+- Number of Instances: One master instance and child instance per session. The child instance exits after creating the session.
+- User Account: Local System
+- Start Time: Within seconds of boot time for the master instance
+
+What is unusual?
+
+- A different parent process other than System(4)
+- Image path is different from C:\Windows\System32
+- More than 1 running process. (children self-terminate and exit after each new session)
+- User is not SYSTEM
+- Unexpected registry entries for Subsystem
+
+#### csrss.exe
+
+csrss.exe (Client Server Runtime Process) is the user-mode side of the Windows subsystem. This process is always running and is critical to system operation. If by chance this process is terminated it will result in system failure. This process is responsible for: the Win32 console window and process thread creation and deletion. For each instance csrsrv.dll, basesrv.dll, and winsrv.dll are loaded (along with others).
+
+This process is also responsible for:
+
+- Making the Windows API available to other processes
+- Mapping drive letters
+- Handling the Windows shutdown process.
+
+You can read more about this process [here](https://en.wikipedia.org/wiki/Client/Server_Runtime_Subsystem).
+
+What is normal?
+
+- Image Path: %SystemRoot%\System32\csrss.exe
+- Parent Process: Created by an instance of smss.exe
+- Number of Instances: Two or more
+- User Account: Local System
+- Start Time: Within seconds of boot time for the first 2 instances (for Session 0 and 1). Start times for additional instances occur as new sessions are created, although often only Sessions 0 and 1 are created.
+
+What is unusual?
+
+- An actual parent process. (smss.exe calls this process and self-terminates)
+- Image file path other than C:\Windows\System32
+- Subtle misspellings to hide rogue process masquerading as csrss.exe in plain sight
+- User is not SYSTEM
+
+### wininit.exe
+
+_TO ADD_
+
+### lsass.exe
+
+Per Wikipedia, "Local Security Authority Subsystem Service (LSASS) is a process in Microsoft Windows operating systems that is responsible for enforcing the security policy on the system. It verifies users logging on to a Windows computer or server, handles password changes, and creates access tokens. It also writes to the Windows Security Log.
+
+It creates security tokens for SAM (Security Account Manager), AD (Active Directory), and NETLOGON. It uses authentication packages specified in `HKLM\System\CurrentControlSet\Control\Lsa`.
+
+![image](https://user-images.githubusercontent.com/58165365/152241249-15b3f7ea-3ad0-4f83-a6d3-86b4c1acc0c5.png)
+
+This is another process adversaries target. Common tools such as mimikatz is used to dump credentials or they mimic this process to hide in plain sight. Again, they do this by either naming their malware by this process name or simply misspelling the malware slightly.
+
+**Extra reading:** How LSASS is maliciously used and additional features that Microsoft has put into place to prevent these attacks. [(here)](https://yungchou.wordpress.com/2016/03/14/an-introduction-of-windows-10-credential-guard/)
+
+What is normal?
+
+![image](https://user-images.githubusercontent.com/58165365/152242677-cda60709-ef09-4543-b037-aff94f34b3d4.png)
+
+- Image Path: %SystemRoot%\System32\lsass.exe
+- Parent Process: wininit.exe
+- Number of Instances: One
+- User Account: Local System
+- Start Time: Within seconds of boot time
+
+What is unusual?
+
+- A parent process other than wininit.exe
+- Image file path other than C:\Windows\System32
+- Subtle misspellings to hide rogue process in plain sight
+- Multiple running instances
+- Not running as SYSTEM
+
+#### winlogon.exe
+
+The Windows Logon, winlogon.exe, is responsible for handling the Secure Attention Sequence (SAS). This is the `ALT+CTRL+DELETE` key combination users press to enter their username & password.
+
+This process is also responsible for loading the user profile. This is done by loading the user's `NTUSER.DAT` into `HKCU` and via userinit.exe loads the user's shell.
+
+![image](https://user-images.githubusercontent.com/58165365/152232160-9f6803a9-a4c6-4686-bbda-d1a6336da386.png)
+
+It is also responsible for locking the screen and running the user's screensaver, among other functions. More deets can be found [here](https://en.wikipedia.org/wiki/Winlogon)
+
+smss.exe launches this process along with a copy of csrss.exe within Session 1.
+
+![image](https://user-images.githubusercontent.com/58165365/152234356-eabdb586-016a-4328-a26a-c889c3039e14.png)
+
+What is normal?
+
+![image](https://user-images.githubusercontent.com/58165365/152234235-e9f7c5f1-f460-48fb-b5f7-e38021e9d6c2.png)
+
+![image](https://user-images.githubusercontent.com/58165365/152234019-699b79b9-327b-4859-8c9d-b07db99f0d28.png)
+
+- Image Path: %SystemRoot%\System32\winlogon.exe
+- Parent Process: Created by an instance of smss.exe that exits, so analysis tools usually do not provide the parent process name.
+- Number of Instances: One or more
+- User Account: Local System
+- Start Time: Within seconds of boot time for the first instance (for Session 1). Additional instances occur as new sessions are created, typically through Remote Desktop or Fast User Switching logons.
+
+What is unusual?
+
+- An actual parent process. (smss.exe calls this process and self-terminates)
+- Image file path other than C:\Windows\System32
+- Subtle misspellings to hide rogue process in plain sight
+- Not running as SYSTEM
+- Shell value in the registry other than explorer.exe
+
+## explorer.exe
+
+Windows Explorer, explorer.exe. This is the process that gives the user access to their folders and files. It also provides functionality to other features such as the Start Menu, Taskbar, etc.
+
+Winlogon process runs userinit.exe, which launches the value in `HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Shell`. Userinit.exe exits after spawning explorer.exe. Because of this, the parent process is non-existent.
+
+![image](https://user-images.githubusercontent.com/58165365/152226033-20996d76-8490-4e45-961d-6148c42ca462.png)
+
+What is normal?
+
+![image](https://user-images.githubusercontent.com/58165365/152225622-08867f38-d9ff-492d-b5f1-53200464e9a3.png)
+
+- Image Path: %SystemRoot%\explorer.exe
+- Parent Process: Created by userinit.exe and exits
+- Number of Instances: One or more per interactively logged-in user
+- User Account: Logged-in user(s)
+- Start Time: First instance when the first interactive user logon session begins
+
+What is unusual?
+
+- An actual parent process. (userinit.exe calls this process and exits)
+- Image file path other than C:\Windows
+- Running as an unknown user
+- Subtle misspellings to hide rogue process in plain sight
+- Outbound TCP/IP connections
+
+![image](https://user-images.githubusercontent.com/58165365/152224907-b930eac3-faa4-4037-a422-a71d44f9c6e4.png)
+
+Note: The above image is a screenshot for the explorer.exe properties view from Process Explorer.
 
 # Summary
 
-| System | Image Path          | C:\Windows\system32\ntoskrnl.exe (NT OS Kernel) |
-| ------ | ------------------- | ----------------------------------------------- |
-|        | Parent Process      | System Idle Process (0)                         |
-|        | User Account        | Local System                                    |
-|        | Start Time          | At boot time                                    |
-|        | Number of Instances | One                                             |
+If you'd like to visualize this on a mindmap, [see](https://github.com/fr334aks-TTW/15-days-of-hacking/blob/7e8b18feb1c2cdabc6e4bd930f547e4170a18249/05t3/01.Core%20Windows%20Processes/Mindmap.html)
+
+|              |              |              |     | Image Path                                      | Parent Process                                                                                                   | User Account                                                                                                                                       | Start Time                                                                                                                                                                                             | Number of Instances                                                                                      |
+| ------------ | ------------ | ------------ | --- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| System       |              |              |     | C:\Windows\system32\ntoskrnl.exe (NT OS Kernel) | System Idle Process (0)                                                                                          | Local System                                                                                                                                       | At boot time                                                                                                                                                                                           | One                                                                                                      |
+|              | smss.exe     |              |     | %SystemRoot%\System32\smss.exe                  | System(4)                                                                                                        | Local System                                                                                                                                       | Within seconds of boot time for the master instance                                                                                                                                                    | One master instance and child instance per session. The child instance exits after creating the session. |
+|              |              | csrss.exe    |     | %SystemRoot%\System32\csrss.exe                 | Created by an instance of smss.exe                                                                               | Local System                                                                                                                                       | Within seconds of boot time for the first 2 instances (for Session 0 and 1). Start times for additional instances occur as new sessions are created, although often only Sessions 0 and 1 are created. | Two or more                                                                                              |
+|              |              | winlogon.exe |     | %SystemRoot%\System32\winlogon.exe              | Created by an instance of smss.exe that exits, so analysis tools usually do not provide the parent process name. | Local System                                                                                                                                       | Within seconds of boot time for the first instance (for Session 1). Additional instances occur as new sessions are created, typically through Remote Desktop or Fast User Switching logons.            | One or more                                                                                              |
+| wininit.exe  |              |              |     | %SystemRoot%\System32\wininit.exe               | Created by an instance of smss.exe                                                                               | Local System                                                                                                                                       | Within seconds of boot time                                                                                                                                                                            | One                                                                                                      |
+|              | services.exe |              |     | %SystemRoot%\System32\services.exe              | wininit.exe                                                                                                      | Local System                                                                                                                                       | Within seconds of boot time                                                                                                                                                                            | One                                                                                                      |
+|              |              | svchost.exe  |     | %SystemRoot%\System32\svchost.exe               | services.exe                                                                                                     | Varies (SYSTEM, Network Service, Local Service) depending on the svchost.exe instance. In Windows 10 some instances can run as the logged-in user. | Typically within seconds of boot time. Other instances can be started after boot                                                                                                                       | Many                                                                                                     |
+|              | lsass.exe    |              |     | %SystemRoot%\System32\lsass.exe                 | wininit.exe                                                                                                      | Local System                                                                                                                                       | Within seconds of boot time                                                                                                                                                                            | One                                                                                                      |
+| explorer.exe |              |              |     | %SystemRoot%\explorer.exe                       | Created by userinit.exe and exits                                                                                | Logged-in user(s)                                                                                                                                  | First instance when the first interactive user logon session begins                                                                                                                                    | One or more per interactively logged-in user                                                             |
+
+I have also attached a poster/cheatsheet for your perusal and indepth illustrations and explanations. [See](https://github.com/fr334aks-TTW/15-days-of-hacking/blob/7e8b18feb1c2cdabc6e4bd930f547e4170a18249/05t3/01.Core%20Windows%20Processes/HuntEvil.pdf)
 
 # Resources
 
 - [Microsoft - Processes and Threads](https://docs.microsoft.com/en-us/windows/win32/procthread/processes-and-threads)
+- [Microsoft - Windows Internals Book](https://docs.microsoft.com/en-us/sysinternals/resources/windows-internals)
 - [TryHackMe - Core Windows Processes](https://tryhackme.com/room/btwindowsinternals)
 - [Microsoft - Finding the process ID](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/finding-the-process-id)
 - [Wikipedia - Session Manager Subsystem](https://en.wikipedia.org/wiki/Session_Manager_Subsystem)
+- [SANS - Hunt Evil Poster](https://www.sans.org/posters/hunt-evil/)
