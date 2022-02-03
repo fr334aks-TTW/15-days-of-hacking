@@ -149,3 +149,5 @@ wwwuser.kgji2ohoyw.web-attacker.com
 -   [Lab: Blind OS command injection with output redirection](https://portswigger.net/web-security/os-command-injection/lab-blind-output-redirection)
 -   [Lab: Blind OS command injection with out-of-band interaction](https://portswigger.net/web-security/os-command-injection/lab-blind-out-of-band)
 -   [Lab: Blind OS command injection with out-of-band data exfiltration](https://portswigger.net/web-security/os-command-injection/lab-blind-out-of-band-data-exfiltration)
+
+![OS_Command_Injection_labs](OS_Command_Injection_labs.png)
