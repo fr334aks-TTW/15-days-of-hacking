@@ -1,13 +1,13 @@
 - [ ] Introduction to Linux. 
-    <details>
+<details>
 
-    <summary>Focus areas</summary>
+<summary>Focus areas</summary>
 
-       - [ ] File structure
-       - [ ] Linux adminstration 
-       - [ ] Linux basics 
-       - [ ] Introduction to Linux.
+ - [ ]  File structure
+ - [ ] Linux adminstration 
+ - [ ] Linux basics 
+ - [ ] Introduction to Linux.
     
     
   
-    </details>
+</details>
