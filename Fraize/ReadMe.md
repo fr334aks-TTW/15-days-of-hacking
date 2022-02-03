@@ -42,11 +42,11 @@
   * [x] Blind XXE 
 
 #### Server-Side Labs
-* [x] SQL injection 
-* [ ] Authentication vulnerabilities
-* [x] Directory Traversal - [Day 1/15]
-* [x] OS Command Injection - [Day 2/15 Day 3/15 ]
-* [ ] Business Logic Vulnerabilities - [ongoing]
+* [x] SQL injection - (Day1/15)
+* [ ] Authentication vulnerabilities - (ongoing)
+* [x] Directory Traversal - (Day 2/15)
+* [x] OS Command Injection - (Day 3/15)
+* [ ] Business Logic Vulnerabilities 
 * [ ] Information Disclosure
 * [ ] Access Control
 * [ ] Server-Side Request Forgery
