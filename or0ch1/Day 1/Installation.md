@@ -14,6 +14,8 @@
 
 - For the pre-built binary you just need to download, extract it into the directory of choice and add the bin directory to path.
 
+- The binray can be downloaded from [Nim Download](https://nim-lang.org/install.html).
+
 - However if you choose the source Distribution there are some few extra steps you need to take in order to install. After extracting cd into the extracted directory and execute:
 
 ```
@@ -35,8 +37,6 @@ bin/nim c koch
 ```
 curl https://nim-lang.org/choosenim/init.sh -sSf | sh
 ```
-
-- The binray can be downloaded from [Nim Download](https://nim-lang.org/install.html).
 
 
 Now that thats out of the way, i started exploring basic concepts of the language.
