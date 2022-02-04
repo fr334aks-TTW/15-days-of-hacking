@@ -7,10 +7,12 @@
 This will mark the beggining of a beautiful journey into Offensive NIM from the basics to implant development and offensive operations.
 Topics i will be studying on:
 1. Basics
-
-    - [ ] NIM Basics
-        - [ ] Installation, Lexical Elements
-        - [ ] Variables, Inputs
+    - [x] NIM Basics
+        - [x] Installation
+        - [x] Syntax 
+        - [x] Variables 
+        - [ ] Inputs
+        - [ ] Lexical Elements
         - [ ] Data Types
     - [ ] Control Flows
     - [ ] Procedures(Methods/Functions)
