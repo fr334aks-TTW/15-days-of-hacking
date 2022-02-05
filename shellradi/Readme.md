@@ -31,10 +31,10 @@
    _starting 1st feb_
    
    
-   * Day1  [Burpsuite](https://tryhackme.com/room/rpburpsuite)
+  [ * Day1](https://github.com/fr334aks-TTW/15-days-of-hacking/tree/main/shellradi/Day1)  [Burpsuite](https://tryhackme.com/room/rpburpsuite)
    
    
-   * Day2  [ssrf](https://tryhackme.com/room/ssrf)
+  [ * Day2](https://github.com/fr334aks-TTW/15-days-of-hacking/tree/main/shellradi/Day2)  [ssrf](https://tryhackme.com/room/ssrf)
    
    
    * Day3
