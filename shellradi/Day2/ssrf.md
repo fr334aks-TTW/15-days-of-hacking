@@ -101,3 +101,81 @@ Again we see that there is no sanitisation or any kind of check performed on the
 #### Read the above.
 
 ` ans: no answer needed `
+
+
+<br><br><br>
+
+
+# Task 3 SSRF Payload 
+
+
+Now we are going to learn what kind of payloads are used to exploit an SSRF vulnerability. To understand this we are going to use a live demonstration. Connect to http://10.10.251.221:5000
+
+The page gives us the option to enter a url, which it will fetch for us.
+
+Basic Payloads
+
+Let's start with the basic payload. This payload might give you the hint that there is an SSRF vulnerability, and give you a hint as to which payloads which you should try next.
+
+Initially, start by searching for the localhost IP (127.0.0.1) with any port to see if the port is running a service. Say you wanted to check if the server has a hidden database, you might search for http://127.0.0.1:3306, 3306 is the port for MySQL DB so if there is a database running, you will likely get a positive response.
+
+If we try this payload on our VM we will see the following output:
+
+![image](https://user-images.githubusercontent.com/41240719/152634732-2fca8b64-ece6-4a7c-adba-6bebf654a518.png)
+
+This shows that the port 3306 is open.
+
+In a similar manner, we could also have used "localhost" or "0.0.0.0" in place of 127.0.0.1
+
+Advanced payloads
+
+Now it's very possible that some sort of sanitization will be being applied to the input, so the system might detect strings like "localhost" or "127.0.0.1" and stop the request. That said, it's possible to try and bypass those kinds of restrictions.
+
+The very first way is to try the IPv6 version of the localhost i.e [::]. So the payload from before would look like this http://[::]:3306.
+
+The basic page we've already worked with doesn't have any filter, so to try these advanced payloads head to http://10.10.251.221:5000/advanced. The page is very similar to the previous one but, you'll notice that if you try the basic payload it detects it as "Malicious code".
+
+Try it for yourself: try to enter the old payloads such as "http://127.0.0.1:3306" or http://localhost:3306 -- you'll get something like:
+
+![image](https://user-images.githubusercontent.com/41240719/152634924-d2e598c8-95d4-4750-93a8-ee79c507244b.png)
+
+
+As expected, this is because there are SSRF checks in place, but still it's possible to bypass them. It's also possible that if you try to access http://[::]:3306, you might get "target not reachable". When this happens it can be the result of how the framework is handling input in the application. If it was a PHP application then this would work, but flask/Django might interpret these payloads differently. If you fail with that payload, try removing the brackets (i.e try http://:::3306): remember that the third colon indicates the separation between port and IP.
+
+So if we enter: http://:::3306 we see something like:
+
+![image](https://user-images.githubusercontent.com/41240719/152634984-55d9607f-71c4-445a-baa8-90db940f664f.png)
+
+It is possible that the IPv6 payload may also be detected. In that case what we usually do is to encode our IP: either into a decimal format or a hexadecimal format.
+
+The IP "127.0.0.1" can be replaced with its Decimal and Hexadecimal counterparts to bypass the restrictions. The decimal version of the localhost IP would be "2130706433" and the Hexadecimal version would be "0x7f000001".
+
+Note - There is a script to do this conversion process, you can find it [here](https://gist.github.com/shellradi/97a3a3d32c3f57dac2ef321ebd8e7d26)
+
+Reading files
+
+Port scanning isn't the only thing that we do with SSRF -- we can also read files from the server, but only if we use the proper schema (i.e for a HTTP request we would start the URL with "http://" -- in a similar manner if we start the URL with "file://" it would then try to read the files from the server itself).
+
+So, for example, a simple SSRF file reading payload would be file:///etc/passwd, to read the /etc/passwd file on a Linux machine.
+
+To see this happen for yourself, go to http://10.10.251.221:5000/filessrf, you'll get another very similar form as with the advanced and basic SSRF tutorials -- but one difference that you'll notice is that you can enter "file://" in this one.
+
+So if now we try to read the file we'll be able to see the contents: 
+
+![image](https://user-images.githubusercontent.com/41240719/152635304-368d9f20-b6e5-4901-8c99-860b1d39a543.png)
+
+
+Remember is that it's unlikely that we'll be able to read files from any higher privileged user such as "root".
+
+![image](https://user-images.githubusercontent.com/41240719/152635355-66dc960f-7222-4075-957b-7363a2d29370.png)
+
+There are a lot of other types of payload that can be used (such as URL encoding, double URL encoding, using schemes like dict, etc). You can see some of these payloads
+[here](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Request%20Forgery#file)
+
+
+#### Read the above.
+` ans: no answer needed `
+
+<br><br><br>
+
+
