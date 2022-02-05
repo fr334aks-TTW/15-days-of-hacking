@@ -179,3 +179,18 @@ There are a lot of other types of payload that can be used (such as URL encoding
 <br><br><br>
 
 
+# Task 4 Exercise 
+
+Now its time for you to try it yourself. I would recommend trying this by yourself, before looking at the next task for the explanation.
+
+For the exercise go to http://yourip:8000.
+
+Exercise: Your task would be to tell how many ports are open on the machine including all the ones that are accessible from outside and as well as the one only accessible from inside. Your answer would also include the port 8000.
+
+#### How many ports are open?
+
+` ans: 5 `
+
+#### How many users are there on the system?
+
+` ans: 3 `
