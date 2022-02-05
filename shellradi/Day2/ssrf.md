@@ -20,3 +20,84 @@ Now if you focus on the above diagram, In a normal case the attacker would only 
 
 ` ans: no answer needed `
 
+
+
+
+
+  <br>  <br>  <br>
+
+
+# Task 2 Cause of the Vulnerability
+
+The main cause of the vulnerability is (as it often is) blindly trusting input from a user. In the case of an SSRF vulnerability, a user would be asked to input a URL (or maybe an IP address). The web application would use that to make a request. SSRF comes about when the input hasn't been properly checked or filtered.
+
+Let's look at some vulnerable code:
+
+Example 1: PHP
+
+Assume there is an application that takes the URL for an image, which the web page then displays for you. The vulnerable SSRF code would look like this:
+
+
+
+
+``` php
+<?php
+
+if (isset($_GET['url']))
+
+{
+  $url = $_GET['url'];
+  $image = fopen($url, 'rb');
+  header("Content-Type: image/png");
+  fpassthru($image);
+
+}  
+  ```
+  
+  
+This is simple PHP code which checks if there is information sent in a 'url' parameter then, without performing any kind of check on it, the code simply makes a request to the user-submitted URL. Attackers essentially have full control of the URL and can make arbitrary GET requests to any website on the Internet through the server -- as well as accessing resources on the server itself.
+
+
+Example 2: Python 
+
+
+``` python 
+
+from flask import Flask, request,  render_template, redirect
+import requests
+
+
+app = Flask(__name__)
+
+
+@app.route("/")
+def start():
+    url = request.args.get("id")
+    r = requests.head(url, timeout=2.000)
+    return render_template("index.html", result = r.content)
+
+if __name__ == "__main__":
+      app.run(host = '0.0.0.0')
+      
+```
+      
+      
+      
+    
+      
+      
+      
+      
+
+The above example shows a very small flask application which does the same thing:
+
+1) It takes the value of the "url" parameter.
+
+2) Then it makes a request to the given URL and shows the content of that URL to the user.
+
+Again we see that there is no sanitisation or any kind of check performed on the user input. This is why you should always try as many different payloads as you can when testing an application
+
+
+#### Read the above.
+
+` ans: no answer needed `
