@@ -34,7 +34,7 @@
    * Day1  [Burpsuite](https://tryhackme.com/room/rpburpsuite)
    
    
-   * Day2
+   * Day2  [ssrf](https://tryhackme.com/room/ssrf)
    
    
    * Day3
