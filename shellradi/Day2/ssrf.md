@@ -189,6 +189,42 @@ Exercise: Your task would be to tell how many ports are open on the machine incl
 
 #### How many ports are open?
 
+**walkthrough**
+
+When we visit the port 8000 we see a simple input field. Now if you try all the basic payloads you'll get the malicious code error.
+
+If you try the IPv6 format you would get a similar error.
+
+![image](https://user-images.githubusercontent.com/41240719/152635928-8dff328e-5757-4d10-b5c9-b972b2f65397.png)
+
+At this point, it looks like the system might not be vulnerable to SSRF at all; but before we give up, we should try using the decimal/hexadecimal conversion method.
+
+We will use the [script](https://gist.github.com/shellradi/97a3a3d32c3f57dac2ef321ebd8e7d26) to convert the IP 127.0.0.1 to decimal which would give us, 2130706433. Now if you want you can use this IP and port 3306 to test if it works or not.
+
+![ssrfbypass](https://user-images.githubusercontent.com/41240719/152636321-75bfb1a0-82a8-4a7d-98c7-7cc8df7a52e4.jpg)
+
+
+That being said we can't check every port by ourselves. Instead we will make a small bash script which will do the work for us.
+
+Note: If you are not interested in writing a bash script then you could instead use Burpsuite's Intruder module, but in this explanation, I am going to show you how to use bash for smaller tasks like these.
+
+
+```bash
+
+for x in {1..65535};
+    do cmd=$(curl -so /dev/null http://10.10.251.221:8000/attack?url=http://2130706433:${x} \
+        -w '%{size_download}');
+    if [ $cmd != 1045 ]; then
+        echo "Open port: $x"
+    fi
+done
+
+```
+The main thing to understand here is the curl command. If you were to run this curl command by itself with a port like 3306, it would give you the size in bytes of the response, which, for a valid response, in this case is 1042. However, if we run it with some random port, say 54321, it would show a return size of 1046 bytes, as the response from the website will be slightly different. This means that for ports that are not reachable we get size 1045 and for a port that is open we get size 1042. On that basis, we are able to write a script to scan every port and tell us when the size is not 1045 bytes. This script will tell you that 5 ports (22, 3306, 5000, 8000, 6783) are open.
+
+In terms of the file reading question, you can just use the default “file://” schema to read files from the system.
+
+
 ` ans: 5 `
 
 #### How many users are there on the system?
