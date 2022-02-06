@@ -18,7 +18,8 @@ A boy has no bio🙂
 
 <details>
     <summary>What is the shell?</summary>
-  - [ ] Intro
+  
+   - [ ] Intro
 
   - [ ] Tools
 
@@ -26,7 +27,8 @@ A boy has no bio🙂
 </details>
 <details>
     <summary>Linux Priviledge escalation</summary>
-  - [ ] Intro
+  
+   - [ ] Intro
 
   - [ ] Enumeration
 
@@ -34,7 +36,8 @@ A boy has no bio🙂
 </details>
 <details>
     <summary>Windows Priviledge escalation</summary>
-  - [ ] Intro
+  
+   - [ ] Intro
 
   - [ ] Info gathering
 
