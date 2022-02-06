@@ -18,16 +18,49 @@ A boy has no bio🙂
 
 <details>
     <summary>What is the shell?</summary>
-  
-   - [ ] Intro
 
-  - [ ] Tools
+  - [x] What is the shell
 
-  - [ ] etc
+  - [x] Tools
+
+  - [x] Types of shells
+
+    - [x] 1. Reverse shells
+
+    - [x] 2. Bindshells
+
+    - [x] Interactivity
+
+  - [x] Netcat stabilization
+
+    - [x] Technique one: python
+
+    - [x] Technique two: rlwrap
+
+    - [x] Technique three: socat
+
+  - [x] socat
+
+    - [x] Socat Reverse Shells
+
+    - [x] Socat Bind Shells
+
+  - [ ] Socat Encrypted Shells
+
+  - [ ] Common Shell Payloads
+
+  - [ ] msfvenom
+
+  - [ ] Metasploit multi/handler
+
+  - [ ] WebShells
+
+  - [ ] Lab exploitation
+
 </details>
 <details>
     <summary>Linux Priviledge escalation</summary>
-  
+
    - [ ] Intro
 
   - [ ] Enumeration
@@ -36,7 +69,7 @@ A boy has no bio🙂
 </details>
 <details>
     <summary>Windows Priviledge escalation</summary>
-  
+
    - [ ] Intro
 
   - [ ] Info gathering
