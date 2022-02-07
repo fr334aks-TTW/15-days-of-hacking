@@ -61,11 +61,33 @@ A boy has no bio🙂
 <details>
     <summary>Linux Priviledge escalation</summary>
 
-   - [ ] Intro
+  - [ ] Introduction
+
+  - [ ] What is priv escalation
 
   - [ ] Enumeration
 
-  - [ ] etc
+  - [ ] Automated enumration Tools
+
+  - [ ] Priviledge Escalation Techniques
+
+    - [ ] Kernel exploits
+
+    - [ ] Sudo
+
+    - [ ] SUID
+
+    - [ ] Capabilities
+
+    - [ ] Cron jobs
+
+    - [ ] PATH
+
+    - [ ] NFS
+
+  - [ ] Lab exploitation
+
+
 </details>
 <details>
     <summary>Windows Priviledge escalation</summary>
