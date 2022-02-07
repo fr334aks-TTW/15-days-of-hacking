@@ -45,17 +45,17 @@ A boy has no bio🙂
 
     - [x] Socat Bind Shells
 
-  - [ ] Socat Encrypted Shells
+  - [x] Socat Encrypted Shells
 
-  - [ ] Common Shell Payloads
+  - [x] Common Shell Payloads
 
-  - [ ] msfvenom
+  - [x] msfvenom
 
-  - [ ] Metasploit multi/handler
+  - [x] Metasploit multi/handler
 
-  - [ ] WebShells
+  - [x] WebShells
 
-  - [ ] Lab exploitation
+  - [x] Lab exploitation
 
 </details>
 <details>
