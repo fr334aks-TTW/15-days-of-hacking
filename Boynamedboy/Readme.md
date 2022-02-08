@@ -61,13 +61,13 @@ A boy has no bio🙂
 <details>
     <summary>Linux Priviledge escalation</summary>
 
-  - [ ] Introduction
+  - [x] Introduction
 
-  - [ ] What is priv escalation
+  - [x] What is priv escalation
 
-  - [ ] Enumeration
+  - [x] Enumeration
 
-  - [ ] Automated enumration Tools
+  - [x] Automated enumration Tools
 
   - [ ] Priviledge Escalation Techniques
 
