@@ -80,3 +80,15 @@ find / -perm -u=s -type f 2>/dev/null
 3. Linux Exploit Suggestor
 4. Linux Smart Enumeration
 5. Linux Priv Checker
+
+
+## Priviledge Escalation Techniques
+### 1. Kernel Exploits
+- Kernel manages communication between components such as memory on system and apps.
+- Thus, as its functions are critical, this requires the kernel to have specific privileges, thus a successful exploit will lead to root privileges.<br>
+<ins>steps:<ins>
+1. Identify kernel version/vulnerable kernel
+2. Search for exploit code of kernel for the target system
+3. Execute exploit on target system
+
+### 2. Sudo
