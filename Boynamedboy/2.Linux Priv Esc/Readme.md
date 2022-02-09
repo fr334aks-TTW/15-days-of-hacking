@@ -92,3 +92,24 @@ find / -perm -u=s -type f 2>/dev/null
 3. Execute exploit on target system
 
 ### 2. Sudo
+
+### 3. SUID(set user identification)
+- Linux privilege controls rely on controlling the users and files interactions using permissions.
+- Files can have rwx permissions.
+- Files with suid bit set allow them to be executed with permission level of the owner of the files and have an "s" bit set showing their special permission level.
+- Find files with suid and sgid bit set using
+```
+find / -type f -perm 04000 -ls 2>/dev/null
+```
+- Use gtfobins.com to check if binary can be exploited through suid bit.
+- e.g. to escalate using python3 with suid bit set:
+```
+python3 -c 'import pty;pty.spawn("\bin\bash -p")';
+```
+-e.g. using bas64:
+```
+LFILE=file_to_read
+./base64 "$LFILE" | base64 --decode
+```
+etc
+
