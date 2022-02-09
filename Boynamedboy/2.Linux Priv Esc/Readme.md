@@ -122,3 +122,15 @@ getcap / -r 2>/deev/null
 - From output, of the binaries, use either of them for privilege escalation or to read files. Use gtfobins for help where needed
 - **nb** files here do not have the suid bit set
 
+### 5. Cron Jobs
+- Cron jobs are used to run scripts or binaries at specifi times.
+- Run with the privilege of their owners and not the current user
+- If a cron job runs with root privileges, change script that will run and our script will now run with root privileges
+- Crontab file is at **/etc/crontab** and anybody logged into the machine can read it.
+<ins>1</ins>
+- Edit a crontab you have write access to but execute by root and receive a reverse root shell, read what you want,etc
+<ins>2</ins>
+- Cronjob was deleted but entry not remove from crontab
+- create the deleted file and edit it, and receive a reverse root shell, read what you want, etc
+
+
