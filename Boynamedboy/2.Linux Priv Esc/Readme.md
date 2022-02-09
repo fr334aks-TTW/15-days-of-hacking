@@ -113,3 +113,12 @@ LFILE=file_to_read
 ```
 etc
 
+### 4. Capabilities
+- Capabilities help manage privileges at a granular level.
+- We can check for tools with such enables capabilities using getcap e.g.:
+```
+getcap / -r 2>/deev/null
+```
+- From output, of the binaries, use either of them for privilege escalation or to read files. Use gtfobins for help where needed
+- **nb** files here do not have the suid bit set
+
