@@ -92,6 +92,22 @@ find / -perm -u=s -type f 2>/dev/null
 3. Execute exploit on target system
 
 ### 2. Sudo
+- sudo allows one to run commands with superuser permissions.
+- Normal users normally dont have superuser permissions but some of their work may require them to have them.
+- In such cases, the user may only be allowed to run the app with superuser permissions while the rest of system doesn't have the privileges.
+- Such apps can be checked through **sudo -l** command. Use gtfobins on help for privesc.
+##### Leverage application functions
+- in some apps, where no exploit is available but is in this context, we can exploit its functionality instead.
+- .e.g. if it reads a config, we can set the config to the file we dont have access to and may end up leaking crucial info.
+##### Leverage LD_PRELOAD
+- LD_PRELOAD option is available on some systems.
+- It allows any program to use shared libraries.
+- If the "env_keep" option is enabled, we can generate a shared library which will be loaded and executed before program is run
+- **nb** LD_PRELOAD option is ignored if real user ID is different from the effective user ID.
+- Steps for privesc include:
+1. Check for preload(with the env_keep option)
+2. Compile a simple code as a share object(.so extension) file.
+3. Run the program with sudo rights and the LD_PRELOAD option pointing to our .so file, which will spawn a root shell
 
 ### 3. SUID(set user identification)
 - Linux privilege controls rely on controlling the users and files interactions using permissions.
