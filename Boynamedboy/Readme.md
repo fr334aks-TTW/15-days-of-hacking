@@ -69,23 +69,23 @@ A boy has no bio🙂
 
   - [x] Automated enumration Tools
 
-  - [ ] Priviledge Escalation Techniques
+  - [x] Priviledge Escalation Techniques
 
-    - [ ] Kernel exploits
+    - [x] Kernel exploits
 
-    - [ ] Sudo
+    - [x] Sudo
 
-    - [ ] SUID
+    - [x] SUID
 
-    - [ ] Capabilities
+    - [x] Capabilities
 
-    - [ ] Cron jobs
+    - [x] Cron jobs
 
-    - [ ] PATH
+    - [x] PATHS
 
-    - [ ] NFS
+    - [x] NFS
 
-  - [ ] Lab exploitation
+  - [x] Lab exploitation
 
 
 </details>
