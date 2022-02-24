@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/58165365/155579746-c2bd89a9-70f9-4b1d-b961-f8917137b69d.png)
+
 It is vital to understand how the Windows operating system functions as a defender. Today i will be going through core processes as understanding how they operate normally can aid a defender to identify unusual activity on the endpoint.
 
 # Core Windows Processes

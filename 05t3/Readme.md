@@ -11,7 +11,7 @@ I Hope this will be a great learning experience for you as well.
 #### Topic to cover
 
 - [x] Core Windows Processes
-- [ ] Windows Registry
+- [x] Windows Registry
 - [ ] Active Directory
 - [ ] Windows Privesc
 - [ ] -

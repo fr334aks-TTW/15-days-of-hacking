@@ -1,3 +1,5 @@
+![Gallery](https://user-images.githubusercontent.com/58165365/155577477-40448468-9d62-4ec6-8001-f936cac6d0ae.png)
+
 # Windows Registry
 
 The Windows Registry is a collection of databases that contains the system's configuration data. This configuration data can be about the hardware, the software, or the user's information. It also includes data about the recently used files, programs used, or devices connected to the system. This data is beneficial from a forensics standpoint.
@@ -147,3 +149,301 @@ RegRipper is available in both a CLI and GUI form which is shown in the screensh
 ![image](https://user-images.githubusercontent.com/58165365/155368449-00bf0f78-b298-42a4-8e82-7ed013b05d58.png)
 
 One shortcoming of RegRipper is that it does not take the transaction logs into account. We must use Registry Explorer to merge transaction logs with the respective registry hives before sending the output to RegRipper for a more accurate result.
+
+# System Information and System Accounts
+
+When we start performing forensic analysis, the first step is to find out about the system information.
+
+## OS Version:
+
+If we only have triage data to perform forensics, we can determine the OS version from which this data was pulled through the registry. To find the OS version, we can use the following registry key:
+
+`SOFTWARE\Microsoft\Windows NT\CurrentVersion`
+
+This is how Registry Explorer shows this registry key:
+
+![image](https://user-images.githubusercontent.com/58165365/155579185-95f48ae1-ba3b-44fd-8bb7-6fba80e23461.png)
+
+## Current control set:
+
+The hives containing the machine’s configuration data used for controlling system startup are called **Control Sets**. Commonly, we will see two Control Sets, `ControlSet001` and `ControlSet002`, in the SYSTEM hive on a machine. In most cases, ControlSet001 will point to the Control Set that the machine booted with, and ControlSet002 will be the _last known good_ configuration. Their locations will be:
+
+`SYSTEM\ControlSet001`
+
+`SYSTEM\ControlSet002`
+
+Windows creates a volatile Control Set when the machine is live, called the CurrentControlSet (`HKLM\SYSTEM\CurrentControlSet`). For getting the most accurate system information, this is the hive that we will refer to. We can find out which Control Set is being used as the CurrentControlSet by looking at the following registry value:
+
+`SYSTEM\Select\Current`
+
+Similarly, the _last known good_ configuration can be found using the following registry value:
+
+`SYSTEM\Select\LastKnownGood`
+
+This is how it looks like in Registry Explorer.
+
+![image](https://user-images.githubusercontent.com/58165365/155579120-5bf6f5d4-5130-4234-8482-9b2f60921750.png)
+
+It is vital to establish this information before moving forward with the analysis. Many forensic artifacts we collect will be collected from the Control Sets.
+
+## Computer Name:
+
+It is crucial to establish the Computer Name while performing forensic analysis to ensure that we are working on the machine we are supposed to work on. We can find the Computer Name from the following location:
+
+`SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName`
+
+Registry Explorer shows it like this.
+
+![image](https://user-images.githubusercontent.com/58165365/155579056-d93b07b8-3931-4e04-8da2-7f8038fcd78d.png)
+
+## Time Zone Information:
+
+For accuracy, it is important to establish what time zone the computer is located in. This will help us understand the chronology of the events as they happened. For finding the Time Zone Information, we can look at the following location:
+
+`SYSTEM\CurrentControlSet\Control\TimeZoneInformation`
+
+Here's how it looks in Registry Explorer.
+
+![image](https://user-images.githubusercontent.com/58165365/155578981-c4b248f3-d4ce-4052-b139-562f5d96bb36.png)
+
+Time Zone Information is important because some data in the computer will have their timestamps in UTC/GMT and others in the local time zone. Knowledge of the local time zone helps in establishing a timeline when merging data from all the sources.
+
+## Network Interfaces and Past Networks:
+
+The following registry key will give a list of network interfaces on the machine we are investigating:
+
+`SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces`
+
+Take a look at this registry key as shown in Registry Explorer
+
+![image](https://user-images.githubusercontent.com/58165365/155578921-dd8c358f-43d1-43ba-8336-fa705a6a25b8.png)
+
+Each Interface is represented with a unique identifier (GUID) subkey, which contains values relating to the interface’s TCP/IP configuration. This key will provide us with information like IP addresses, DHCP IP address and Subnet Mask, DNS Servers, and more. This information is significant because it helps you make sure that you are performing forensics on the machine that you are supposed to perform it on.
+
+The past networks a given machine was connected to can be found in the following locations:
+
+`SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\Unmanaged`
+
+`SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\Managed`
+
+![image](https://user-images.githubusercontent.com/58165365/155578882-a19d3c62-d3e6-432b-9e2f-b688f9bc86d6.png)
+
+These registry keys contain past networks as well as the last time they were connected. The last write time of the registry key points to the last time these networks were connected.
+
+## Autostart Programs (Autoruns):
+
+The following registry keys include information about programs or commands that run when a user logs on.
+
+`NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Run`
+
+`NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\RunOnce`
+
+`SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce`
+
+`SOFTWARE\Microsoft\Windows\CurrentVersion\policies\Explorer\Run`
+
+`SOFTWARE\Microsoft\Windows\CurrentVersion\Run`
+
+![image](https://user-images.githubusercontent.com/58165365/155578824-b7b0c385-b12d-4797-b210-ce70731b14db.png)
+
+The following registry key contains information about services:
+
+`SYSTEM\CurrentControlSet\Services`
+
+Notice the Value of the Start key in the screenshot below.
+
+![image](https://user-images.githubusercontent.com/58165365/155578779-c5901275-d070-4cb2-a8b2-fa78e53b4513.png)
+
+In this registry key, if the start key is set to **0x02**, this means that this service will start at boot.
+
+## SAM hive and user information:
+
+The SAM hive contains user account information, login information, and group information. This information is mainly located in the following location:
+
+`SAM\Domains\Account\Users`
+
+Take a look at the below screenshot
+
+![image](https://user-images.githubusercontent.com/58165365/155578704-b34c2dac-028c-4a66-8662-2fb4fa67a1fd.png)
+
+The information contained here includes the relative identifier (RID) of the user, number of times the user logged in, last login time, last failed login, last password change, password expiry, password policy and password hint, and any groups that the user is a part of.
+
+# Usage or knowledge of files/folders
+
+## Recent Files:
+
+Windows maintains a list of recently opened files for each user. As we might have seen when using Windows Explorer, it shows us a list of recently used files. This information is stored in the NTUSER hive and can be found on the following location:
+
+`NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs`
+
+![image](https://user-images.githubusercontent.com/58165365/155578601-b64ebbfa-2e64-4046-bce2-a02854a1e43f.png)
+
+Registry Explorer allows us to sort data contained in registry keys quickly. For example, the Recent documents tab arranges the Most Recently Used (MRU) file at the top of the list. Registry Explorer also arranges them so that the Most Recently Used (MRU) file is shown at the top of the list and the older ones later.
+
+Another interesting piece of information in this registry key is that there are different keys with file extensions, such as `.pdf`, `.jpg`, `.docx` etc. These keys provide us with information about the last used files of a specific file extension. So if we are looking specifically for the last used PDF files, we can look at the following registry key:
+
+`NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs\.pdf`
+
+Registry Explorer also lists the Last Opened time of the files.
+
+## Office Recent Files
+
+Similar to the Recent Docs maintained by Windows Explorer, Microsoft Office also maintains a list of recently opened documents. This list is also located in the NTUSER hive. It can be found in the following location:
+
+`NTUSER.DAT\Software\Microsoft\Office\VERSION`
+
+The version number for each Microsoft Office release is different. An example registry key will look like this:
+
+`NTUSER.DAT\Software\Microsoft\Office\15.0\Word`
+
+Here, the 15.0 refers to Office 2013. A list of different Office releases and their version numbers can be found on [this link](https://docs.microsoft.com/en-us/deployoffice/install-different-office-visio-and-project-versions-on-the-same-computer#office-releases-and-their-version-number).
+
+Starting from Office 365, Microsoft now ties the location to the user's [live ID](https://www.microsoft.com/security/blog/2008/05/07/what-is-a-windows-live-id/). In such a scenario, the recent files can be found at the following location.
+
+`NTUSER.DAT\Software\Microsoft\Office\VERSION\UserMRU\LiveID_####\FileMRU`
+
+In such a scenario, the recent files can be found at the following location. This location also saves the complete path of the most recently used files.
+
+# ShellBags:
+
+When any user opens a folder, it opens in a specific layout. Users can change this layout according to their preferences. These layouts can be different for different folders. This information about the Windows 'shell' is stored and can identify the Most Recently Used files and folders. Since this setting is different for each user, it is located in the user hives. We can find this information on the following locations:
+
+`USRCLASS.DAT\Local Settings\Software\Microsoft\Windows\Shell\Bags`
+
+`USRCLASS.DAT\Local Settings\Software\Microsoft\Windows\Shell\BagMRU`
+
+`NTUSER.DAT\Software\Microsoft\Windows\Shell\BagMRU`
+
+`NTUSER.DAT\Software\Microsoft\Windows\Shell\Bags`
+
+Registry Explorer doesn't give us much information about ShellBags. However, another tool from Eric Zimmerman's tools called the `ShellBag Explorer` shows us the information in an easy-to-use format. We just have to point to the hive file we have extracted, and it parses the data and shows us the results. An example is shown below.
+
+![image](https://user-images.githubusercontent.com/58165365/155578517-7025b03c-e273-4d96-9bc2-64583e96d6f5.png)
+
+# Open/Save and LastVisited Dialog MRUs:
+
+When we open or save a file, a dialog box appears asking us where to save or open that file from. It might be noticed that once we open/save a file at a specific location, Windows remembers that location. This implies that we can find out recently used files if we get our hands on this information. We can do so by examining the following registry keys
+
+`NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\OpenSavePIDlMRU`
+
+`NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\LastVisitedPidlMRU`
+
+This is how Registry Explorer shows this registry key.
+
+![image](https://user-images.githubusercontent.com/58165365/155578466-be14b4a5-207e-44f3-a6a0-dd4bcb8cd4ee.png)
+
+## Windows Explorer Address/Search Bars:
+
+Another way to identify a user's recent activity is by looking at the paths typed in the Windows Explorer address bar or searches performed using the following registry keys, respectively.
+
+`NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths`
+
+`NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\WordWheelQuery`
+
+Here is how the TypedPaths key looks like in Registry Explorer:
+
+![image](https://user-images.githubusercontent.com/58165365/155578398-9daba32d-1bb2-4267-a680-004c86b04494.png)
+
+# Evidence of Execution
+
+## UserAssist:
+
+Windows keeps track of applications launched by the user using Windows Explorer for statistical purposes in the User Assist registry keys. These keys contain information about the programs launched, the time of their launch, and the number of times they were executed. However, programs that were run using the command line can't be found in the User Assist keys. The User Assist key is present in the NTUSER hive, mapped to each user's GUID. We can find it at the following location:
+
+`NTUSER.DAT\Software\Microsoft\Windows\Currentversion\Explorer\UserAssist\{GUID}\Count`
+
+Take a look at the below screenshot from Registry Explorer
+
+![image](https://user-images.githubusercontent.com/58165365/155578307-949987fb-a6bc-4250-b1a7-c5e44a0c8d96.png)
+
+## ShimCache:
+
+ShimCache is a mechanism used to keep track of application compatibility with the OS and tracks all applications launched on the machine. Its main purpose in Windows is to ensure backward compatibility of applications. It is also called Application Compatibility Cache (AppCompatCache). It is located in the following location in the SYSTEM hive:
+
+`SYSTEM\CurrentControlSet\Control\Session Manager\AppCompatCache`
+
+ShimCache stores file name, file size, and last modified time of the executables.
+
+Our goto tool, the Registry Explorer, doesn't parse ShimCache data in a human-readable format, so we go to another tool called `AppCompatCache Parser`, also a part of Eric Zimmerman's tools. It takes the SYSTEM hive as input, parses the data, and outputs a CSV file that looks like this:
+
+![image](https://user-images.githubusercontent.com/58165365/155578110-85d4d853-faff-4f52-8fa3-eb0b31693ba7.png)
+
+We can use the following command to run the AppCompatCache Parser Utility:
+
+```powershell
+AppCompatCacheParser.exe --csv <path to save output> -f <path to SYSTEM hive for data parsing> -c <control set to parse>
+```
+
+The output can be viewed using EZviewer, another one of Eric Zimmerman's tools.
+
+## AmCache:
+
+The AmCache hive is an artifact related to ShimCache. This performs a similar function to ShimCache, and stores additional data related to program executions. This data includes execution path, installation, execution and deletion times, and SHA1 hashes of the executed programs. This hive is located in the file system at:
+
+`C:\Windows\appcompat\Programs\Amcache.hve`
+
+Information about the last executed programs can be found at the following location in the hive:
+
+`Amcache.hve\Root\File\{Volume GUID}\`
+
+This is how Registry Explorer parses the AmCache hive:
+
+![image](https://user-images.githubusercontent.com/58165365/155565075-bdce6e60-cee9-4f78-b9fa-6c5d73fabb46.png)
+
+## BAM/DAM:
+
+**Background Activity Monitor** or BAM keeps a tab on the activity of background applications. Similar **Desktop Activity Moderator** or DAM is a part of Microsoft Windows that optimizes the power consumption of the device. Both of these are a part of the Modern Standby system in Microsoft Windows.
+
+In the Windows registry, the following locations contain information related to BAM and DAM. This location contains information about last run programs, their full paths, and last execution time.
+
+`SYSTEM\CurrentControlSet\Services\bam\UserSettings\{SID}`
+
+`SYSTEM\CurrentControlSet\Services\dam\UserSettings\{SID}`
+
+Below you can see how Registry Explorer parses data from BAM:
+
+![image](https://user-images.githubusercontent.com/58165365/155567555-59ff8e58-d326-44db-905c-a15e628b1d0d.png)
+
+# External Devices/USB device forensics
+
+When performing forensics on a machine, often the need arises to identify if any USB or removable drives were attached to the machine. If so, any information related to those devices is important for a forensic investigator. In this task, we will go through the different ways to find information on connected devices and the drives on a system using the registry.
+
+## Device identification:
+
+The following locations keep track of USB keys plugged into a system. These locations store the vendor id, product id, and version of the USB device plugged in and can be used to identify unique devices. These locations also store the time the devices were plugged into the system.
+
+`SYSTEM\CurrentControlSet\Enum\USBSTOR`
+
+`SYSTEM\CurrentControlSet\Enum\USB`
+
+Registry Explorer shows this information in a nice and easy-to-understand way.
+
+![image](https://user-images.githubusercontent.com/58165365/155568712-21f6d145-a646-455b-9e94-f3c93819a5c0.png)
+
+## First/Last Times:
+
+Similarly, the following registry key tracks the first time the device was connected, the last time it was connected and the last time the device was removed from the system.
+
+`SYSTEM\CurrentControlSet\Enum\USBSTOR\Ven_Prod_Version\USBSerial#\Properties\{83da6326-97a6-4088-9453-a19231573b29}\####`
+
+In this key, the #### sign can be replaced by the following digits to get the required information:
+
+| Value | Information           |
+| ----- | --------------------- |
+| 0064  | First Connection time |
+| 0066  | Last Connection time  |
+| 0067  | Last removal time     |
+
+Although we can check this value manually, as we have seen above, Registry Explorer already parses this data and shows us if we select the USBSTOR key.
+
+## USB device Volume Name:
+
+The device name of the connected drive can be found at the following location:
+
+`SOFTWARE\Microsoft\Windows Portable Devices\Devices`
+
+![image](https://user-images.githubusercontent.com/58165365/155570879-368c3e30-e8a1-4811-a047-a518d1168b82.png)
+
+We can compare the GUID we see here in this registry key and compare it with the Disk ID we see on keys mentioned in device identification to correlate the names with unique devices.
+
+Combining all of this information, we can create a fair picture of any USB devices that were connected to the machine we're investigating.

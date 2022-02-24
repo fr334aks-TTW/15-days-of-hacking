@@ -5,5 +5,5 @@
 
 ### `Day 2`
 
-- Continuation of day 1
+- Covered Windows Registry
 - Link to Summary : [Day 2](https://github.com/fr334aks-TTW/15-days-of-hacking/tree/main/05t3/01.Core%20Windows%20Processes)
