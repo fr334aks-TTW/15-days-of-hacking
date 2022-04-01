@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
 }
 ```
 We will compile the code without any protection mechanism and will enable them one by one as we continue.
-![image](https://github.com/fr334aks-TTW/15-days-of-hacking/blob/main/Winter/assets/Pasted%20image%2020220314151215.png')
+![image](https://github.com/fr334aks-TTW/15-days-of-hacking/blob/main/Winter/assets/Pasted%20image%2020220314151215.png)
 ###### flags
 ```
 -m32                                   :  this is so we compile a 32bit binary
