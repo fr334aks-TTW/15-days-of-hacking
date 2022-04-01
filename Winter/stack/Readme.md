@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
 }
 ```
 We will compile the code without any protection mechanism and will enable them one by one as we continue.
-![[Pasted image 20220314151215.png]]
+![](../assets/Pasted image 20220314151215.png)
 ###### flags
 ```
 -m32                                   :  this is so we compile a 32bit binary
@@ -73,24 +73,24 @@ We will compile the code without any protection mechanism and will enable them o
 #### Demo
 Now we use GDB to disassemble (ill be using gdb peda for its awesomeness in memory investigation)
 
-![](assets/Pasted image 20220314153111.png) 
+![](../assets/asted image 20220314153111.png) 
 
 This shows what weve discussed so far, the function arguments are pushed onto the stack then the old frame pointer(ebp) then esp is moved into ebp making that the new frame pointer then space of 140 is created for the local variable(our buffer).
 
 Now we know the size alocated for our buffer lets try supplying more than that and see what happens.
-![[Pasted image 20220314153859.png]]
+![] (../assets/Pasted image 20220314153859.png)
 
 
 Wooo now lets check what the hell happened, we go back to gdb and set a breakpoint at memcpy and the ret instruction. Then we automate using commands: we set it to step when it reaches the second breakpoint and inspect the registers.
-![[Pasted image 20220314160011.png]]
+![](../assets/Pasted image 20220314160011.png)
 
 Lets run supplying it with giving it more than it can chew
-![[Pasted image 20220314160848.png]]
+![](../assets/Pasted image 20220314160848.png)
 
 Hiting the first breakpoint all is still wellish, this shows us the stack layout and we can basically predict what will happen next, lets continue and see
-![[Pasted image 20220314161038.png]]
+![](../assets/Pasted image 20220314161038.png)
 
 OOOH we overwrote our esp in other words we have overwritten the next instruction pointer
-![[Pasted image 20220314161319.png]]
+![](../assets/Pasted image 20220314161319.png)
 
 Now we have an overflow but how can we exploit this
