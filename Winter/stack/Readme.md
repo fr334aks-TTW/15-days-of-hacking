@@ -35,6 +35,7 @@ To accomplish this there are 2 registers used to keep traack of the stack:
 
 Functions can access local variables by offsets of ESP; but since WORDS(4butes ) are pushed and poped
 of the stack it is recommended to use something called a frame pointer “FP”.
+
 ![memory layout!](../assets/stack-memorylayout.jpeg)
 
 #### How it Works
@@ -61,6 +62,7 @@ int main(int argc, char *argv[]){
 }
 ```
 We will compile the code without any protection mechanism and will enable them one by one as we continue.
+
 ![image](https://github.com/fr334aks-TTW/15-days-of-hacking/blob/main/Winter/assets/Pasted%20image%2020220314151215.png)
 ###### flags
 ```
@@ -78,19 +80,23 @@ Now we use GDB to disassemble (ill be using gdb peda for its awesomeness in memo
 This shows what weve discussed so far, the function arguments are pushed onto the stack then the old frame pointer(ebp) then esp is moved into ebp making that the new frame pointer then space of 140 is created for the local variable(our buffer).
 
 Now we know the size alocated for our buffer lets try supplying more than that and see what happens.
-![](../assets/Pasted%20image%2020220314153859.png)
+
+![image](../assets/Pasted%20image%2020220314153859.png)
 
 
 Wooo now lets check what the hell happened, we go back to gdb and set a breakpoint at memcpy and the ret instruction. Then we automate using commands: we set it to step when it reaches the second breakpoint and inspect the registers.
+
 ![image](../assets/Pasted%20image%2020220314160011.png)
 
 Lets run supplying it with giving it more than it can chew
+
 ![image](../assets/Pasted%20image%2020220314160848.png)
 
 Hiting the first breakpoint all is still wellish, this shows us the stack layout and we can basically predict what will happen next, lets continue and see
 ![image](../assets/Pasted%20image%2020220314161038.png)
 
 OOOH we overwrote our esp in other words we have overwritten the next instruction pointer
+
 ![image](../assets/Pasted%20image%2020220314161319.png)
 
 Now we have an overflow but how can we exploit this. To be Continued ..hahahahahahahaha winter out
