@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
 }
 ```
 We will compile the code without any protection mechanism and will enable them one by one as we continue.
-![image](../assets/Pasted image 20220314151215.png)
+![image](../assets/'Pasted image 20220314151215.png')
 ###### flags
 ```
 -m32                                   :  this is so we compile a 32bit binary
