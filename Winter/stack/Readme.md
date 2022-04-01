@@ -93,9 +93,11 @@ Lets run supplying it with giving it more than it can chew
 ![image](../assets/Pasted%20image%2020220314160848.png)
 
 Hiting the first breakpoint all is still wellish, this shows us the stack layout and we can basically predict what will happen next, lets continue and see
+
 ![image](../assets/Pasted%20image%2020220314161038.png)
 
 OOOH we overwrote our esp in other words we have overwritten the next instruction pointer
+
 ![image](../assets/Pasted%20image%2020220314161319.png)
 
 Now we have an overflow but how can we exploit this. To be Continued ..hahahahahahahaha winter out
