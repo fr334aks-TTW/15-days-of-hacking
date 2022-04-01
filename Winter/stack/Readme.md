@@ -35,7 +35,7 @@ To accomplish this there are 2 registers used to keep traack of the stack:
 
 Functions can access local variables by offsets of ESP; but since WORDS(4butes ) are pushed and poped
 of the stack it is recommended to use something called a frame pointer “FP”.
-![memory layout!](assets/stack-memorylayout.jpeg)
+![memory layout!](../assets/stack-memorylayout.jpeg)
 
 #### How it Works
 When a function is called with arguments, the arguments are pushed backwards on the stack then followed by the instruction pointer  which  is pushed right after, this is commonly known as the return address of the function. at this point the stack pointer points at our return address, in the called funtion, the following steps take place:
